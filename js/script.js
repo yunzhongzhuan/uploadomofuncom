@@ -1041,6 +1041,8 @@ function push_files_to_files_page(files_items,isPrepend){
 		div.media_localhost = item["media_localhost"];
 		div.share = item["share"];
 		div.parent = item["parent"];
+		div.origin = item["origin"];
+		div.mirror = item["mirror"];
 		let type_icon = get_files_item_type_icon(div.name);
 		div.innerHTML = '<div class="files-item-icon"><i class="' + type_icon + '"></i></div><div class="files-item-name"><span>' + div.name + '</span></div><div class="files-item-date"><span>' + div.date + '</span></div><div class="files-item-size"><span>' + div.size_unit + '</span></div><div class="files-item-menu" title="菜单"><i class="fa fa-bars"></i><div class="files-item-menu-items files-item-menu-items-hide"><div class="files-item-menu-item files-item-menu-item-rename-button"><i class="fa fa-pencil"></i>命名</div><div class="files-item-menu-item files-item-menu-item-preview-button"><i class="fa fa fa-play-circle"></i>预览</div><div class="files-item-menu-item files-item-menu-item-share-button"><i class="fa fa-share-alt"></i>分享</div><div style="display:none;" class="files-item-menu-item files-item-menu-item-link-button"><i class="fa fa-link"></i>内链</div><div class="files-item-menu-item files-item-menu-item-public-link-button"><i class="fa fa-link"></i>外链</div><div class="files-item-menu-item files-item-menu-item-delete-button"><i class="fa fa-trash"></i>删除</div><div class="files-item-menu-item files-item-menu-item-download-button"><i class="fa fa-download"></i>下载</div></div></div>';
 		div.selected = false;
@@ -1409,8 +1411,19 @@ function push_files_to_files_page(files_items,isPrepend){
 		div.menu_public_link_element.onclick = function(){
 			if( public_link_hostname.length < 10 || public_link_hostname == ""){
 				
+				
+				
 				if( private_link_status && private_link_hostname.length > 10 ){
 					show_link(this.parent.url_private_link);
+					return false;
+				}
+				
+				if(
+					this.parent.mirror != undefined && this.parent.mirror == true
+					&&
+					this.parent.origin != undefined && this.parent.origin != "" && this.parent.origin.length > 10
+				  ){
+					show_link(this.parent.origin);
 					return false;
 				}
 				
@@ -2168,8 +2181,19 @@ files_main.oncontextmenu=function(e){
 		files_public_link_button.onclick = function(){
 			if( public_link_hostname.length < 10 || public_link_hostname == ""){
 				
+				
+				
 				if( private_link_status && private_link_hostname.length > 10 ){
 					show_link(files_items_selected_array[0].url_private_link);
+					return false;
+				}
+				
+				if(
+					files_items_selected_array[0].mirror != undefined && files_items_selected_array[0].mirror == true
+					&&
+					files_items_selected_array[0].origin != undefined && files_items_selected_array[0].origin != "" && files_items_selected_array[0].origin.length > 10
+				){
+					show_link(files_items_selected_array[0].origin);
 					return false;
 				}
 				
@@ -6485,6 +6509,7 @@ let workers;
 								"offline_size":ResultJSON["offline_size"],
 								"offline_status":ResultJSON["offline_status"],
 								"public_link":ResultJSON["public_link"],
+								"origin":ResultJSON["origin"],
 							}
 							push_files_to_files_page([file_item],true);
 						}
