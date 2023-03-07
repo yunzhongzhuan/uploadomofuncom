@@ -8,8 +8,8 @@
 	window.location.href=window.location.href.replace(/www./,'');
 }*/
 
-// 2023/2/24 22:38 1
-let js_script_js_update_version = 2023022422380001;
+// 2023/3/7 14:33 1
+let js_script_js_update_version = 202303071433000001;
 
 function to_dev_version_or_main_version(){
 	window.location.href = window.location.href.replace(/www.yunzhongzhuan.com/,'http.yunzhongzhuan.com').replace('https://','http://');
@@ -1640,7 +1640,15 @@ if(files_public_all_link_button!=undefined){
 		for(let i=0;i<files_items.length;i++){
 			let item = files_items[i];
 			if(item.url_public_link != undefined && item.url_public_link.length > 30 && item.url_public_link.indexOf('undefined')==-1  ){
-				array_url_public_link.push(item.name + "\r\n" + item.url_public_link);
+				if(
+					item["mirror"] != undefined && item["mirror"] == true
+					&&
+					item["origin"] != undefined && item["origin"] != "" && item["origin"].length > 10
+				  ){
+					array_url_public_link.push(item.name + "\r\n" + item.origin);
+				}else{
+					array_url_public_link.push(item.name + "\r\n" + item.url_public_link);
+				}
 			}else{
 				array_url_public_link.push(item.name + "\r\n正在同步该文件，请您稍等片刻。");
 			}
