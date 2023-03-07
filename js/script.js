@@ -11,6 +11,7 @@
 // 2023/3/7 14:33 1
 let js_script_js_update_version = 202303071433000001;
 
+
 function to_dev_version_or_main_version(){
 	window.location.href = window.location.href.replace(/www.yunzhongzhuan.com/,'http.yunzhongzhuan.com').replace('https://','http://');
 }
@@ -1418,14 +1419,14 @@ function push_files_to_files_page(files_items,isPrepend){
 					return false;
 				}
 				
-				if(
+				/*if(
 					this.parent.mirror != undefined && this.parent.mirror == true
 					&&
 					this.parent.origin != undefined && this.parent.origin != "" && this.parent.origin.length > 10
 				  ){
 					show_link(this.parent.origin);
 					return false;
-				}
+				}*/
 				
 				swal({
 					title: "不可使用",
@@ -1629,6 +1630,7 @@ let files_upload_button = document.getElementById('files-upload-button');
 
 // 批量复制
 let files_public_all_link_button = document.getElementById('files-public-all-link-button');
+
 if(files_public_all_link_button!=undefined){
 	files_public_all_link_button.onclick = function(){
 		if( public_link_hostname.length < 10 || public_link_hostname == ""){
@@ -1641,6 +1643,8 @@ if(files_public_all_link_button!=undefined){
 			let item = files_items[i];
 			if(item.url_public_link != undefined && item.url_public_link.length > 30 && item.url_public_link.indexOf('undefined')==-1  ){
 				if(
+					false
+					&&
 					item["mirror"] != undefined && item["mirror"] == true
 					&&
 					item["origin"] != undefined && item["origin"] != "" && item["origin"].length > 10
@@ -1681,6 +1685,66 @@ if(files_public_all_link_button!=undefined){
 		});
 	}
 }
+
+let files_public_all_link_origin_button = document.getElementById('files-public-all-link-origin-button');
+
+
+if(files_public_all_link_origin_button!=undefined){
+	files_public_all_link_origin_button.onclick = function(){
+		if( public_link_hostname.length < 10 || public_link_hostname == ""){
+			files_public_all_link_origin_button.style.display = "none";
+			return false;
+		}
+		let files_items = files_items_files_items.getElementsByClassName('files-item');
+		let array_url_public_link = new Array();
+		for(let i=0;i<files_items.length;i++){
+			let item = files_items[i];
+			if(item.url_public_link != undefined && item.url_public_link.length > 30 && item.url_public_link.indexOf('undefined')==-1  ){
+				if(
+					item["mirror"] != undefined && item["mirror"] == true
+					&&
+					item["origin"] != undefined && item["origin"] != "" && item["origin"].length > 10
+				  ){
+					array_url_public_link.push(item.name + "\r\n" + item.origin);
+				}else{
+					// array_url_public_link.push(item.name + "\r\n" + item.url_public_link);
+					array_url_public_link.push(item.name + "\r\n正在同步该文件，请您稍等片刻。");
+				}
+			}else{
+				array_url_public_link.push(item.name + "\r\n正在同步该文件，请您稍等片刻。");
+			}
+		}
+		let link = array_url_public_link.join('\r\n\r\n');
+		swal({
+			title: "分享成功",
+			text: link,
+			icon: "success",
+			buttons: ["取消","复制"],
+			closeOnClickOutside: false,
+		}).then((willDelete) => {
+			if (willDelete) {
+				// 复制文本 复制文字 JS自动选中文字
+				// copy_text(link);
+				var selection = window.getSelection();
+				selection.removeAllRanges();
+				var range = document.createRange();
+				range.selectNodeContents(document.getElementsByClassName('swal-text')[0]);
+				selection.addRange(range);
+				document.execCommand("Copy");
+				swal({
+				    title: "复制成功",
+				    text: "复制成功！",
+				    icon: "success",
+				    buttons: "确定",
+				    closeOnClickOutside: false,
+				});
+			}
+		});
+	}
+}
+
+
+
 
 files_upload_button.onclick = function(){
 	// 如果未登录
@@ -2196,14 +2260,14 @@ files_main.oncontextmenu=function(e){
 					return false;
 				}
 				
-				if(
+				/*if(
 					files_items_selected_array[0].mirror != undefined && files_items_selected_array[0].mirror == true
 					&&
 					files_items_selected_array[0].origin != undefined && files_items_selected_array[0].origin != "" && files_items_selected_array[0].origin.length > 10
 				){
 					show_link(files_items_selected_array[0].origin);
 					return false;
-				}
+				}*/
 				
 				swal({
 					title: "不可使用",
@@ -2266,6 +2330,7 @@ files_main.oncontextmenu=function(e){
 	// 是否显示批量复制外链
 	if( public_link_hostname.length < 10 || public_link_hostname == ""){}else{
 		files_public_all_link_button.style.display = "block";
+		files_public_all_link_origin_button.style.display = "block";
 	}
 	// 是否显示剪切按钮
 	if( ( folders_items_selected_array.length + files_items_selected_array.length ) > 0 ){
